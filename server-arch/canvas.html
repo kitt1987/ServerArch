@@ -1,0 +1,27 @@
+<html>
+<head>
+	<script type="text/javascript" src="canvas2d.js"></script>
+	<script type="text/javascript">
+		function init() {
+			var exc = new Canvas2D('c');
+			exc.changeText(null, 'black');
+			var rec_color = 'rgb(51, 204, 255';
+			var width = exc.drawRec(0, 0, 100, 50, 'www.cdn.pic.audio.bf.com', function(){console.log('click me 1');}, null, rec_color);
+			exc.drawRec(width + 100, 0, 100, 50, null, function(){console.log('click me 2');}, null);
+
+			var arrow_color = 'black';
+			exc.drawHArrow(width, width + 100, 25, function(){console.log('click me arrow 1');}, null, arrow_color);
+			
+			exc.drawRec(0, 75, 100, 50, 'pic.bf.com', function(){console.log('click me 3');}, null, rec_color);
+			exc.drawRec(0, 200, 100, 50, null, function(){console.log('click me 4');}, null);
+			exc.drawVArrow(125, 200, 50, function(){console.log('click me arrow 2');}, null, arrow_color);
+		}
+	</script>
+</head>
+
+<body onload="init()">
+	<canvas id="c" width="500" height="500">
+		Canvas is not supported!!!
+	</canvas>
+</body>
+</html>
