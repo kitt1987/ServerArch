@@ -19,16 +19,21 @@ function BackServer(server_arch, name, from, ssl) {
   this.requests = [];
 
   // FIXME handle browsers are not supported!
-  var pos = server_arch.getNextPos();
-  var size = server_arch.getServerSize();
+  this.pos = server_arch.getNextPos();
+  this.size = server_arch.getServerSize();
   var canvas_obj = document.createElement("CANVAS");
-  canvas_obj.height = size.height;
+  canvas_obj.height = this.size.height;
   this.canvas = new Canvas2D(canvas_obj);
-  this.canvas.changeColor('rgb(51, 204, 255');
-  this.canvas.changeText(null, 'black');
-  __Log('Draw server at {' + pos.x + ',' + pos.y + '} size {' + size.width + ',' + size.height + '}');
-  this.canvas.drawRec(pos.x, pos.y, size.width, size.height, name);
+  this.canvas.changeColor('rgb(50, 205, 50)');
+  this.canvas.changeText(null, 'white');
+  // __Log('Draw server at {' + pos.x + ',' + pos.y + '} size {' + size.width + ',' + size.height + '}');
+  this.draw();
   server_arch.appendServer(this);
+}
+
+BackServer.prototype.draw = function() {
+  this.canvas.drawRec(this.pos.x, this.pos.y, this.size.width,
+    this.size.height, this.dname);
 }
 
 BackServer.prototype.getCanvasObj = function() {
@@ -44,6 +49,16 @@ BackServer.prototype.appendRequest = function(req) {
   }
 
   this.requests.push(req);
+  if (this.requests.length > 100) {
+    this.canvas.changeColor('rgb(255, 0, 0)');
+    this.draw();
+  } else if (this.requests.length > 60) {
+    this.canvas.changeColor('rgb(255, 69, 00)');
+    this.draw();
+  } else if (this.requests.length > 30) {
+    this.canvas.changeColor('rgb(255, 165, 00)');
+    this.draw();
+  }
 }
 
 function ServerArch() {
@@ -73,11 +88,11 @@ ServerArch.prototype.reqHandler = function(request) {
   __Log('headers in total:' + request.request.headers.length);
 
   for (var each in request.request.headers) {
-    __Log('Header:' + request.request.headers[each].name + "," + (request.request.headers[each].name == "Host"));
+    // __Log('Header:' + request.request.headers[each].name + "," + (request.request.headers[each].name == "Host"));
     if (request.request.headers[each].name == "Host") {
       var host = request.request.headers[each].value.trim();
       var i = this.server_names.indexOf(host);
-      __Log('Lookup host:' + host + ',' + i);
+      // __Log('Lookup host:' + host + ',' + i);
       var req = new BackReq(request.request.url, mime_type);
       if (i >= 0) {
         __Log('Found server ' + host);
@@ -110,11 +125,11 @@ ServerArch.prototype.appendServer = function(back_server) {
 }
 
 function __Log(text) {
-  chrome.experimental.devtools.console.addMessage(
-    chrome.experimental.devtools.console.Severity.Warning,
-    text);
+  // chrome.experimental.devtools.console.addMessage(
+  //   chrome.experimental.devtools.console.Severity.Warning,
+  //   text);
 
-//  console.log(text);
+ console.log(text);
 }
 
 function ct(dn) {
